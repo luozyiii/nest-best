@@ -1,0 +1,16 @@
+GET http://localhost:3000/book
+
+POST http://localhost:3000/book/add
+Content-Type: application/json
+
+{
+    "name": "红楼梦"
+}
+
+Get http://localhost:3000/book/getBookById?id=1
+
+Get http://localhost:3000/book/getBookById2?id=2
+
+GET http://localhost:3000/book/findBookById/2 
+
+GET http://localhost:3000/book/findBookById2/2/xxx
