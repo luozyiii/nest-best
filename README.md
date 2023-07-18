@@ -14,7 +14,7 @@ nest new nest-best
 
 ### 目录说明
 
-```
+```bash
 ├── dist                        # 编译后的目录，打包产物
 ├── node_modules                # 项目依赖包
 ├── REST_Client                 # 结合 vs code 插件 REST Client 调试接口示例
