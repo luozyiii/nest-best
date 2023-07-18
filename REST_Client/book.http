@@ -9,20 +9,19 @@ POST http://localhost:3000/book/add
 Content-Type: application/json
 
 {
-    "name": "西游记",
-    "description": "056"
+    "name": "红楼梦",
+    "description": "反对非法地方"
 }
 
 ### 删除书籍
-GET http://localhost:3000/book/delete/1
+GET http://localhost:3000/book/delete/2
 
 ### 修改书籍
 POST http://localhost:3000/book/update/2
 Content-Type: application/json
 
 {
-    "name": "红楼梦",
-    "description": "898989"
+    "description": "hihihi哈哈"
 }
 
 ## 根据书名查询
