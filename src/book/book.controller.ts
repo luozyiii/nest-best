@@ -7,21 +7,54 @@ import {
   Body,
   Param,
   Headers,
+  Inject,
 } from '@nestjs/common';
 import { BookService } from './book.service';
 
 @Controller('book')
 export class BookController {
-  constructor(private readonly bookService: BookService) {}
-  @Get()
+  constructor(
+    private readonly bookService: BookService,
+    @Inject('Category') private categorys: string[],
+    @Inject('MyFactory') private myFactory: string,
+  ) {}
+
+  @Get('/list')
   getBooks(): any {
     return this.bookService.getBooks();
   }
 
+  @Get('/page')
+  getPageBooks(@Query() query): any {
+    const { page = 1, size = 10 } = query;
+    return this.bookService.getPageBooks(page, size);
+  }
+
+  @Get('/category')
+  getCategorys(): string[] {
+    console.log(this.myFactory);
+    return this.categorys;
+  }
+
   @Post('/add')
   addBook(@Body() body): any {
-    console.log('body', body);
-    return this.bookService.addBook();
+    return this.bookService.addBook(body);
+  }
+
+  @Get('/delete/:id')
+  deleteBook(@Param() param): any {
+    return this.bookService.deleteBook(param.id);
+  }
+
+  @Post('/update/:id')
+  updateBook(@Param() param, @Body() body): any {
+    return this.bookService.updateBook(param.id, body);
+  }
+
+  @Post('/getBookByName')
+  getBookByName(@Body() body): any {
+    console.log('body.name', body.name);
+    return this.bookService.getBookByName(body.name);
   }
 
   @Get('/getBookById')

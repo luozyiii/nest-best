@@ -1,16 +1,49 @@
-GET http://localhost:3000/book
+### 查询所有书籍
+GET http://localhost:3000/book/list
 
+### 分页查询
+GET http://localhost:3000/book/page?page=1&size=2
+
+### 添加书籍
 POST http://localhost:3000/book/add
 Content-Type: application/json
 
 {
-    "name": "红楼梦"
+    "name": "西游记",
+    "description": "056"
 }
 
-Get http://localhost:3000/book/getBookById?id=1
+### 删除书籍
+GET http://localhost:3000/book/delete/1
+
+### 修改书籍
+POST http://localhost:3000/book/update/2
+Content-Type: application/json
+
+{
+    "name": "红楼梦",
+    "description": "898989"
+}
+
+## 根据书名查询
+
+POST http://localhost:3000/book/getBookByName
+Content-Type: application/json
+
+{
+    "name": "水浒传"
+}
+
+### 根据ID查询书籍
+Get http://localhost:3000/book/getBookById?id=8
 
 Get http://localhost:3000/book/getBookById2?id=2
 
-GET http://localhost:3000/book/findBookById/2 
+GET http://localhost:3000/book/findBookById/1
+
+### 多参数的传递
 
 GET http://localhost:3000/book/findBookById2/2/xxx
+
+### 书籍分类
+GET http://localhost:3000/book/category

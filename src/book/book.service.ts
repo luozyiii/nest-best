@@ -1,37 +1,104 @@
 import { Injectable } from '@nestjs/common';
+import { Like, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Book } from './entities/book.entity';
 
 @Injectable()
 export class BookService {
-  getBooks() {
+  // 依赖注入
+  constructor(
+    @InjectRepository(Book) private readonly book: Repository<Book>,
+  ) {}
+
+  async getBooks() {
+    const data = await this.book.find();
     return {
       code: 200,
-      data: ['西游记', '三国演义', '水浒传'],
-      msg: '请求书本列表成功',
+      data: data?.map((item: any) => {
+        const { id, name } = item;
+        return {
+          id,
+          name,
+        };
+      }),
+      msg: 'success',
     };
   }
-  addBook() {
+
+  async getPageBooks(page: number, size: number) {
+    const records = await this.book.find({
+      skip: (page - 1) * size,
+      take: size,
+    });
+    const total = await this.book.count();
     return {
       code: 200,
       data: {
-        id: 4,
-        name: '红楼梦',
+        page,
+        size,
+        records,
+        total,
       },
-      msg: '添加书本成功',
+      msg: 'success',
     };
   }
-  getBookById(id: number) {
-    let reJson: any = {};
-    switch (id) {
-      case 1:
-        reJson = { id: 1, name: '西游记' };
-        break;
-      case 2:
-        reJson = { id: 2, name: '三国演义' };
-        break;
-      case 3:
-        reJson = { id: 3, name: '水浒传' };
-        break;
-    }
-    return reJson;
+
+  async addBook(body: any) {
+    const book = new Book();
+    const { name, description } = body;
+    book.name = name;
+    book.description = description;
+    const data = await this.book.save(book);
+    return {
+      code: 200,
+      data: data,
+      msg: '添加书籍成功',
+    };
+  }
+
+  async deleteBook(id: number) {
+    await this.book.delete(id);
+    return {
+      code: 200,
+      data: null,
+      msg: '删除书籍成功',
+    };
+  }
+
+  async updateBook(id: number, body: any) {
+    const book = new Book();
+    const { name, description } = body;
+    book.name = name;
+    book.description = description;
+    await this.book.update(id, book);
+    return {
+      code: 200,
+      data: null,
+      msg: '更新书籍成功',
+    };
+  }
+
+  async getBookByName(name: string) {
+    const data = await this.book.find({
+      where: {
+        name: Like(`%${name}%`),
+      },
+    });
+    return {
+      code: 200,
+      data: data,
+      msg: 'success',
+    };
+  }
+
+  async getBookById(id: any) {
+    const data = await this.book.findOneBy({
+      id,
+    });
+    return {
+      code: 200,
+      data: data,
+      msg: 'success',
+    };
   }
 }
