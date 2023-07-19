@@ -10,7 +10,7 @@ import { CommonModule } from './common/common.module';
 @Module({
   imports: [
     BookModule,
-    TypeOrmModule.forRoot(MySQLConfig),
+    TypeOrmModule.forRoot({ ...MySQLConfig }),
     Book2Module,
     CommonModule,
   ],

@@ -1,11 +1,14 @@
 # 使用Node.js作为基础镜像
-FROM node:18-alpine3.17
+FROM node:20-alpine3.18
 
 # 设置工作目录
 WORKDIR /app
 
 # 复制package.json和package-lock.json文件到工作目录
 COPY package*.json ./
+
+# npm 源，选用国内镜像源以提高下载速度
+RUN npm config set registry https://registry.npm.taobao.org/
 
 # 安装依赖
 RUN npm install
