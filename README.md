@@ -119,7 +119,7 @@ docker run -d -p 3000:3000 nest-best -name nest-best
 # -name nest-best: 设置容器的名称为"nest-best"。
 ```
 
-http://81.71.98.176:3000/，看到Hello World!，说明部署成功。
+http://81.71.98.176:3000/ ，看到 Hello World!，说明部署成功。
 
 ## 入门
 
