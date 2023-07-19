@@ -75,6 +75,41 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+### 部署
+
+1、项目根目录创建 Dockerfile
+
+```Dockerfile
+# 使用Node.js作为基础镜像
+FROM node:18.17.0
+
+# 设置工作目录
+WORKDIR /app
+
+# 复制package.json和package-lock.json文件到工作目录
+COPY package*.json ./
+
+# 安装依赖
+RUN npm ci --only=production
+
+# 复制应用程序的源代码到工作目录
+COPY . .
+
+# 暴露应用程序的端口
+EXPOSE 3000
+
+# 启动应用程序
+CMD ["npm", "run", "start:prod"]
+```
+
+```bash
+# 2、导航到您的NestJS应用程序的根目录，并运行以下命令来构建Docker镜像：
+docker build -t nest-best .
+
+# 3、使用以下命令在Docker容器中运行您的NestJS应用程序：
+docker run -p 3000:3000 nest-best
+```
+
 ## 入门
 
 ### 创建一个 book 模块和路由
