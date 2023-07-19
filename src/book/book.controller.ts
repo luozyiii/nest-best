@@ -10,6 +10,7 @@ import {
   Inject,
 } from '@nestjs/common';
 import { BookService } from './book.service';
+import { Book2Service } from 'src/book2/book2.service';
 
 @Controller('book')
 export class BookController {
@@ -17,6 +18,8 @@ export class BookController {
     private readonly bookService: BookService,
     @Inject('Category') private categorys: string[],
     @Inject('MyFactory') private myFactory: string,
+    private readonly book2Service: Book2Service,
+    @Inject('Common') private Common: any,
   ) {}
 
   @Get('/list')
@@ -84,5 +87,27 @@ export class BookController {
     console.log('headers', headers);
     const id: number = parseInt(param.id);
     return this.bookService.getBookById(id);
+  }
+
+  // 测试热重载
+  @Get('/hotLoad')
+  hotLoad(): any {
+    return 'HotLoad Function';
+  }
+
+  // 调用 book2Service 方法
+  @Get('/getBook2')
+  getBook2(): any {
+    return this.book2Service.getBook2();
+  }
+
+  // 调用全局模块方法
+  @Get('/author')
+  getAuthor(): any {
+    const author = `作者: ${this.Common?.author}`;
+    return {
+      code: 200,
+      data: author,
+    };
   }
 }

@@ -46,3 +46,12 @@ GET http://localhost:3000/book/findBookById2/2/xxx
 
 ### 书籍分类
 GET http://localhost:3000/book/category
+
+### 测试热重载
+GET http://localhost:3000/book/hotLoad
+
+### 调用其他 module 的方法 
+GET http://localhost:3000/book/getBook2
+
+### 调用全局模块方法
+GET http://localhost:3000/book/author

@@ -14,4 +14,9 @@ export class AppController {
   getHi(): string {
     return 'Hi NestJS.';
   }
+
+  @Get('/corstest')
+  corsTest(): object {
+    return { message: '测试跨域请求成功' };
+  }
 }

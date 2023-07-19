@@ -1,6 +1,8 @@
-## [NestJS](https://nestjs.com/) 环境搭建和项目创建
+# [NestJS](https://nestjs.com/) 快速入门
 
 [中文文档](https://www.nestjs.com.cn/) 不一定是最新的。
+
+## NestJS 环境搭建和项目创建
 
 ```bash
 # node 官网查看安装方法 https：//nodejs.org
@@ -393,3 +395,295 @@ getCategorys(): string[] {
   return this.categorys;
 }
 ```
+
+## 增加热重载功能
+
+```bash
+# 安装依赖
+npm i --save-dev webpack-node-externals run-script-webpack-plugin webpack @types/webpack-env
+```
+
+```js
+// 项目根目录下增加一个webpack-hmr.config.js的配置文件
+const nodeExternals = require('webpack-node-externals');
+const { RunScriptWebpackPlugin } = require('run-script-webpack-plugin');
+
+module.exports = function (options, webpack) {
+  return {
+    ...options,
+    entry: ['webpack/hot/poll?100', options.entry],
+    externals: [
+      nodeExternals({
+        allowlist: ['webpack/hot/poll?100'],
+      }),
+    ],
+    plugins: [
+      ...options.plugins,
+      new webpack.HotModuleReplacementPlugin(),
+      new webpack.WatchIgnorePlugin({
+        paths: [/\.js$/, /\.d\.ts$/],
+      }),
+      new RunScriptWebpackPlugin({
+        name: options.output.filename,
+        autoRestart: false,
+      }),
+    ],
+  };
+};
+```
+
+```bash
+# 替换启动脚本
+"start:dev": "nest build --webpack --webpackPath webpack-hmr.config.js --watch",
+
+# 重新启动项目
+npm run start:dev
+```
+
+然后在/src/book/book.controller.ts 文件里增加一个 hotLoad() 方法测试。
+
+```ts
+@Get('/hotLoad')
+hotLoad(): any {
+  return 'HotLoad Function';
+}
+```
+
+## 中间件 Middleware
+
+### 局部中间件
+
+```bash
+# 命令生成
+nest g mi counter
+
+# CREATE src/counter/counter.middleware.spec.ts
+# CREATE src/counter/counter.middleware.ts
+```
+
+```ts
+// counter.middleware.ts 打印一下
+console.log('进入中间件...');
+next(); // 必须调用 next() 方法，否则请求无法继续
+```
+
+```ts
+// book.module.ts使用
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { CounterMiddleware } from '../counter/counter.middleware';
+
+export class BookModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CounterMiddleware).forRoutes('book');
+  }
+}
+```
+
+发起请求 http://localhost:3000/book/list ，控制台看到输出，说明中间件起作用了。
+
+### 全局中间件
+
+局部中间件我们是以实现 NestModule 接口的形式,把中间件挂在到 Moudle 上的.而全局中间件要以 function 的形式 编写到 main.ts 里。
+
+```ts
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+
+// 定义全局中间件方法
+function MiddleWareAll(req: any, res: any, next: any) {
+  console.log('我是全局中间件.....');
+  next();
+}
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  // 使用全局中间件
+  app.use(MiddleWareAll);
+
+  await app.listen(3000);
+
+  if (module.hot) {
+    module.hot.accept();
+    module.hot.dispose(() => app.close());
+  }
+}
+bootstrap();
+```
+
+发起请求 http://localhost:3000/hi ，控制台看到输出，说明中间件起作用了。
+
+### 中间件 Middleware-用第三方中间件实现跨域
+
+NestJS 是自带配置项的`app.enableCors(); `(main.ts)，可以通过简单的配置完成跨域操作。这里主要是学习一下 use 第三方中间件。
+
+```bash
+# 安装依赖
+npm install cors
+npm install @types/cors -D
+```
+
+```ts
+// app.controller.ts
+@Get('/corstest')
+corsTest(): object {
+  return { message: '测试跨域请求成功' };
+}
+
+// main.ts
+import * as cors from 'cors';
+
+app.use(cors());
+```
+
+打开 www.baidu.com, f12 控制台
+
+```ts
+// 设置跨域前后都调用一下
+fetch('http://localhost:3000/book/list')
+  .then((res) => res.json())
+  .then((res) => {
+    console.log(res);
+  });
+```
+
+## 模块 Module
+
+### 模块之间相互调用（共享）
+
+```bash
+# 创建 book2 模块
+nest g module book2
+# 用命令行创建 controller
+nest g controller book2 --no-spec
+# 用命令行创建 service
+nest g service book2 --no-spec
+```
+
+```ts
+// book2.service.ts 增加 getBook2 方法
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class Book2Service {
+  async getBook2() {
+    return {
+      code: 200,
+      data: '调用 Book2Service 方法成功',
+      msg: 'success',
+    };
+  }
+}
+```
+
+```ts
+// book2.module.ts 导出 Book2Service
+import { Module } from '@nestjs/common';
+import { Book2Controller } from './book2.controller';
+import { Book2Service } from './book2.service';
+
+@Module({
+  controllers: [Book2Controller],
+  providers: [Book2Service],
+  exports: [Book2Service],
+})
+export class Book2Module {}
+```
+
+```ts
+// 在 book.module.ts 引入 Book2Service
+// 然后注入 providers
+import { Book2Service } from '../book2/book2.service';
+
+@Module({
+  providers: [
+    Book2Service,
+    ...
+  ],
+})
+```
+
+```ts
+// 最后在 book.controller.ts 进行引入使用
+import { Book2Service } from 'src/book2/book2.service';
+
+@Controller('book')
+export class BookController {
+  ...
+
+  // 调用 book2Service 方法
+  @Get('/getBook2')
+  getBook2(): any {
+    return this.book2Service.getBook2();
+  }
+}
+
+```
+
+调用 http://localhost:3000/book/getBook2，看到结果返回，即实现了跨模块调用
+
+### 全局模块
+
+```bash
+# 创建模块
+nest g module common
+```
+
+```ts
+// common.module.ts
+import { Module, Global } from '@nestjs/common';
+
+@Global()
+@Module({
+  providers: [
+    {
+      provide: 'Common',
+      useValue: { author: 'Leslie' },
+    },
+  ],
+  exports: [
+    {
+      provide: 'Common',
+      useValue: { author: 'Leslie' },
+    },
+  ],
+})
+export class CommonModule {}
+```
+
+```ts
+// 在 app.module.ts 引入 全局模块
+import { CommonModule } from './common/common.module';
+
+@Module({
+  imports: [
+    ...,
+    CommonModule,
+  ],
+})
+export class AppModule {}
+```
+
+```ts
+// book.controller.ts 中依赖注入，并使用
+@Controller('book')
+export class BookController {
+  constructor(
+    ...,
+    @Inject('Common') private Common: any,
+  ) {}
+
+  // 调用全局模块方法
+  @Get('/author')
+  getAuthor(): any {
+    const author = `作者: ${this.Common?.author}`;
+    return {
+      code: 200,
+      data: author,
+    };
+  }
+}
+```
+
+调用 http://localhost:3000/book/author 验证。
+
+## 持续更新...
