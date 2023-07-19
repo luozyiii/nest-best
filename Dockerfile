@@ -8,7 +8,10 @@ WORKDIR /app
 COPY package*.json ./
 
 # npm 源，选用国内镜像源以提高下载速度
-RUN npm config set registry https://registry.npm.taobao.org/
+# RUN npm config set registry https://registry.npm.taobao.org/
+
+# 腾讯源
+RUN npm config set registry http://mirrors.cloud.tencent.com/npm/
 
 # 安装依赖
 RUN npm install
