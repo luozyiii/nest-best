@@ -746,4 +746,120 @@ export class BookController {
 
 调用 http://localhost:3000/book/author 验证。
 
+## 接口文档 @nestjs/swagger
+
+文档地址： http://localhost:3000/docs
+
+### 安装，基本配置
+
+```bash
+# 安装
+npm install --save @nestjs/swagger
+```
+
+```ts
+// main.ts
+import { NestFactory } from '@nestjs/core';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { AppModule } from './app.module';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  // ...
+  const config = new DocumentBuilder()
+    .setTitle('接口文档')
+    .setDescription('描述描述描述描述描述描述')
+    .setVersion('1.0')
+    .addTag('')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, document);
+
+  await app.listen(3000);
+  // ...
+}
+bootstrap();
+```
+
+### 分组
+
+```ts
+// app.controller.ts
+import { ApiTags } from '@nestjs/swagger';
+
+@Controller()
+@ApiTags('全局')
+
+// book.controller.ts
+@Controller()
+@ApiTags('书籍')
+```
+
+### 接口添加描述信息
+
+```ts
+// app.controller.ts
+import { ApiOperation } from '@nestjs/swagger';
+
+@Get('hi')
+@ApiOperation({ summary: 'hi接口', description: '单个接口描述' })
+```
+
+### 接口参数描述
+
+```ts
+// book.controller.ts
+import { ApiParam } from '@nestjs/swagger';
+
+@Get('/delete/:id')
+@ApiParam({ name: 'id', description: '书籍id', required: true })
+```
+
+### query 参数描述
+
+```ts
+// book.controller.ts
+import { ApiQuery } from '@nestjs/swagger';
+
+@Get('/page')
+@ApiQuery({ name: 'page', description: '页码', required: true, type: Number })
+@ApiQuery({
+  name: 'size',
+  description: '分页大小',
+  required: true,
+  type: Number,
+})
+```
+
+### 自定义返回信息
+
+```ts
+// book.controller.ts
+import { ApiResponse } from '@nestjs/swagger';
+
+@ApiResponse({ status: 403, description: '自定义返回信息' })
+```
+
+### post 请求的 body 参数描述 - @ApiBody
+
+```ts
+// dto/create-book.dto.ts
+import { ApiProperty } from '@nestjs/swagger';
+
+export default class CreateBookDto {
+  @ApiProperty({ default: '三国演义' })
+  readonly name: string;
+
+  @ApiProperty({ default: '三国演义是一本好书' })
+  readonly description: string;
+}
+
+// book.controller.ts
+import { ApiBody } from '@nestjs/swagger';
+import { CreateBookDto } from './dto';
+
+@Post('/add')
+@ApiBody({ type: CreateBookDto })
+```
+
 ## 持续更新...

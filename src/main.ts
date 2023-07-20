@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 // 定义全局中间件方法
@@ -12,6 +13,14 @@ async function bootstrap() {
   // app.enableCors(); // 允许跨域
   // 使用全局中间件
   app.use(MiddleWareAll);
+
+  const config = new DocumentBuilder()
+    .setTitle('接口文档')
+    .setDescription('描述描述描述描述描述描述')
+    .setVersion('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, document);
 
   await app.listen(3000);
 
