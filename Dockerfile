@@ -19,6 +19,9 @@ RUN npm install
 # 复制应用程序的源代码到工作目录
 COPY . .
 
+# 构建应用程序
+RUN npm run build
+
 # 暴露应用程序的端口
 EXPOSE 3000
 
