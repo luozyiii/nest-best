@@ -135,7 +135,7 @@ docker run -d -p 3000:3000 nest-best
 # nest-best: 要运行的容器的名称或镜像。
 ```
 
-http://81.71.98.176:3000/ ，看到 Hello World!，说明部署成功。
+http://81.71.98.176:3000/ ，看到 Hello Nest!，说明部署成功。
 
 ## 入门
 
