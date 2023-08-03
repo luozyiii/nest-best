@@ -1,0 +1,10 @@
+GET http://localhost:3000/template
+
+POST http://localhost:3000/template/add
+Content-Type: application/json
+
+{
+  "name": "vite-antd-pc",
+  "type": "project",
+  "url": "https://github.com/luozyiii/vite-antd-pc"
+}
