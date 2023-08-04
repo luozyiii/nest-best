@@ -1,10 +1,12 @@
-GET http://localhost:3000/template
+# 模版列表
+GET http://localhost:3000/template/list
 
+# 添加模版
 POST http://localhost:3000/template/add
 Content-Type: application/json
 
 {
-  "name": "vite-antd-pc",
+  "name": "vite-antd-pc 管理后台",
   "type": "project",
   "url": "https://github.com/luozyiii/vite-antd-pc"
 }
