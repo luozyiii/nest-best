@@ -1,0 +1,8 @@
+### 注册
+POST http://localhost:3000/user/register
+Content-Type: application/json
+
+{
+    "username": "luo13",
+    "password": "123456789"
+}

@@ -8,6 +8,7 @@ import { CommonModule } from './common/common.module';
 import { BookModule } from './book/book.module';
 import { Book2Module } from './book2/book2.module';
 import { TemplateModule } from './template/template.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { TemplateModule } from './template/template.module';
     MongooseModule.forRoot(mongodbUrl),
     CommonModule,
     BookModule,
+    UserModule,
     Book2Module,
     TemplateModule,
   ],
