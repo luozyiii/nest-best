@@ -864,4 +864,36 @@ import { CreateBookDto } from './dto';
 @ApiBody({ type: CreateBookDto })
 ```
 
+## 注册/登录
+
+[nestjs authentication](https://docs.nestjs.com/security/authentication)
+
+### auth 模块 和 user 模块
+
+### swagger 支持 Authorization
+
+```ts
+// main.ts
+const config = new DocumentBuilder()
+  .setTitle('接口文档')
+  .setDescription('这是 Nestjs 提供的接口')
+  .setVersion('1.0')
+  .addBearerAuth(
+    {
+      // I was also testing it without prefix 'Bearer ' before the JWT
+      description: `[just text field] Please enter token in following format: Bearer <JWT>`,
+      name: 'Authorization',
+      bearerFormat: 'Bearer', // I`ve tested not to use this field, but the result was the same
+      scheme: 'Bearer',
+      type: 'http', // I`ve attempted type: 'apiKey' too
+      in: 'Header',
+    },
+    'access-token',
+  )
+  .build();
+
+// xx.controller.ts 中使用
+@ApiBearerAuth('access-token')
+```
+
 ## 持续更新...

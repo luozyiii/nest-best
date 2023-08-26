@@ -1,10 +1,4 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Book {
@@ -17,17 +11,17 @@ export class Book {
   @Column({ type: 'varchar', comment: '书籍描述' })
   description: string;
 
-  @CreateDateColumn({
-    name: 'create_time',
+  @Column({
     type: 'timestamp',
     comment: '创建时间',
+    default: () => 'CURRENT_TIMESTAMP',
   })
-  createTime: Date;
+  create_time: Date;
 
-  @UpdateDateColumn({
-    name: 'updated_time',
-    type: 'datetime',
+  @Column({
+    type: 'timestamp',
     comment: '更新时间',
+    default: () => 'CURRENT_TIMESTAMP',
   })
-  updatedTime: string;
+  updated_time: Date;
 }

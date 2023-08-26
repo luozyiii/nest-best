@@ -4,7 +4,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import encry from '../utils/crypto';
 
 @Injectable()
 export class UserService {
@@ -33,21 +32,5 @@ export class UserService {
     });
     if (!user) throw new HttpException('用户名不存在', HttpStatus.BAD_REQUEST);
     return user;
-  }
-
-  async login(loginAuthDto: CreateUserDto) {
-    const { username, password } = loginAuthDto;
-    const user = await this.findOne(username);
-    if (user?.password !== encry(password, user.salt)) {
-      throw new HttpException('密码错误', HttpStatus.UNAUTHORIZED);
-    }
-    const payload = { username: user.username, sub: user.id };
-    const token = await this.jwtService.signAsync(payload);
-
-    return {
-      code: 200,
-      data: token,
-      msg: 'success',
-    };
   }
 }

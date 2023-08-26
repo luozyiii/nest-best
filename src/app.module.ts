@@ -9,14 +9,16 @@ import { BookModule } from './book/book.module';
 import { Book2Module } from './book2/book2.module';
 import { TemplateModule } from './template/template.module';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({ ...mysqlConfig }),
     MongooseModule.forRoot(mongodbUrl),
     CommonModule,
-    BookModule,
+    AuthModule,
     UserModule,
+    BookModule,
     Book2Module,
     TemplateModule,
   ],

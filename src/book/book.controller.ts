@@ -16,6 +16,7 @@ import {
   ApiQuery,
   ApiBody,
   ApiResponse,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { BookService } from './book.service';
 import { Book2Service } from '../book2/book2.service';
@@ -23,6 +24,7 @@ import { CreateBookDto, UpdateBookDto, SearchBookDto } from './dto';
 
 @Controller('book')
 @ApiTags('书籍')
+@ApiBearerAuth('access-token')
 export class BookController {
   constructor(
     private readonly bookService: BookService,
