@@ -127,7 +127,7 @@ CMD ["npm", "run", "start:prod"]
 docker build -t nest-best .
 
 # 3、使用以下命令在Docker容器中运行您的NestJS应用程序：
-docker run -d -p 3000:3000 nest-best
+docker run --name nest-best -d -p 3000:3000 nest-best
 
 # docker run: 运行一个新的容器。
 # -d: 在后台运行容器。
