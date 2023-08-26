@@ -3,7 +3,7 @@ export const mysqlConfig: any = {
   host: '81.71.98.176', // 数据库的连接地址 host
   port: 3306, // 数据库的端口 3306
   username: 'root',
-  password: 'luo924361501',
+  password: '******',
   database: 'luozhiyi', // 连接的数据库
   retryDelay: 500, // 重试连接数据库间隔
   retryAttempts: 10, // 允许重连次数

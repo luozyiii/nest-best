@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import * as dotenv from 'dotenv';
 import { AppModule } from './app.module';
 
 // 定义全局中间件方法
@@ -9,6 +10,7 @@ function MiddleWareAll(req: any, res: any, next: any) {
 }
 
 async function bootstrap() {
+  dotenv.config(); // 加载环境变量
   const app = await NestFactory.create(AppModule);
   // app.enableCors(); // 允许跨域
   // 使用全局中间件

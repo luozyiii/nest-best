@@ -6,3 +6,16 @@ Content-Type: application/json
     "username": "luo13",
     "password": "123456789"
 }
+
+### 登录
+POST http://localhost:3000/user/login
+Content-Type: application/json
+
+{
+    "username": "leslie",
+    "password": "123456"
+}
+
+### 登录后才可访问
+POST http://localhost:3000/user/test
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imxlc2xpZSIsInN1YiI6ImM0ZDAyYzU2LTZmYzktNDgyNy04OTkxLWVmZjA0ZmE3ODQxNiIsImlhdCI6MTY5MzA0MzgwMywiZXhwIjoxNjkzMDUxMDAzfQ.xCJhYXJGFgMifKltV61xd580IubTtWeu6VROwgaJoEM
