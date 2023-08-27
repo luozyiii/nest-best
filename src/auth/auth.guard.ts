@@ -1,8 +1,9 @@
 import {
   CanActivate,
   ExecutionContext,
+  HttpException,
+  HttpStatus,
   Injectable,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
@@ -25,7 +26,8 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     if (!token) {
-      throw new UnauthorizedException();
+      throw new HttpException({ code: 401, msg: '无效token' }, HttpStatus.OK);
+      // throw new UnauthorizedException();
     }
     try {
       const payload = await this.jwtService.verifyAsync(token, {
@@ -35,7 +37,7 @@ export class AuthGuard implements CanActivate {
       // so that we can access it in our route handlers
       request['user'] = payload;
     } catch {
-      throw new UnauthorizedException();
+      throw new HttpException({ code: 401, msg: 'token已过期' }, HttpStatus.OK);
     }
     return true;
   }

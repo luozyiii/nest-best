@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Book } from './entities/book.entity';
+import { HTTP_SUCCESS } from '../../config/httpcode';
 
 @Injectable()
 export class BookService {
@@ -13,7 +14,7 @@ export class BookService {
   async getBooks() {
     const data = await this.book.find();
     return {
-      code: 200,
+      code: HTTP_SUCCESS,
       data: data?.map((item: any) => {
         const { id, name } = item;
         return {
@@ -32,7 +33,7 @@ export class BookService {
     });
     const total = await this.book.count();
     return {
-      code: 200,
+      code: HTTP_SUCCESS,
       data: {
         page,
         size,
@@ -50,7 +51,7 @@ export class BookService {
     book.description = description;
     const data = await this.book.save(book);
     return {
-      code: 200,
+      code: HTTP_SUCCESS,
       data: data,
       msg: '添加书籍成功',
     };
@@ -59,7 +60,7 @@ export class BookService {
   async deleteBook(id: number) {
     await this.book.delete(id);
     return {
-      code: 200,
+      code: HTTP_SUCCESS,
       data: null,
       msg: '删除书籍成功',
     };
@@ -72,7 +73,7 @@ export class BookService {
     book.description = description;
     await this.book.update(id, book);
     return {
-      code: 200,
+      code: HTTP_SUCCESS,
       data: null,
       msg: '更新书籍成功',
     };
@@ -85,7 +86,7 @@ export class BookService {
       },
     });
     return {
-      code: 200,
+      code: HTTP_SUCCESS,
       data: data,
       msg: 'success',
     };
@@ -96,7 +97,7 @@ export class BookService {
       id,
     });
     return {
-      code: 200,
+      code: HTTP_SUCCESS,
       data: data,
       msg: 'success',
     };

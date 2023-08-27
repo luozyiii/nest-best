@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Template } from './schemas/template.schema';
 import CreateTemplateDto from './dto/create-template.dto';
+import { HTTP_SUCCESS } from '../../config/httpcode';
 
 @Injectable()
 export class TemplateService {
@@ -14,7 +15,7 @@ export class TemplateService {
     const createdTemplate = new this.templateModel(body);
     const data = await createdTemplate.save();
     return {
-      code: 200,
+      code: HTTP_SUCCESS,
       data: data,
       msg: '添加模版成功',
     };
@@ -23,7 +24,7 @@ export class TemplateService {
   async findAll() {
     const data = await this.templateModel.find().exec();
     return {
-      code: 200,
+      code: HTTP_SUCCESS,
       data: data?.map((item: any) => {
         const { id, name, url, type } = item;
         return {

@@ -4,6 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from '../../config/httpcode';
 
 @Injectable()
 export class UserService {
@@ -17,12 +18,22 @@ export class UserService {
     const existUser = await this.userRepository.findOne({
       where: { username },
     });
-    if (existUser) throw new Error('用户已存在');
+    if (existUser) {
+      throw new HttpException(
+        { code: HTTP_CLIENT_ERROR, msg: '用户已存在' },
+        HttpStatus.OK,
+      );
+      // throw new Error('用户已存在');
+    }
     try {
       const newUser = await this.userRepository.create(createUserDto);
       return await this.userRepository.save(newUser);
     } catch (error) {
-      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        { code: HTTP_SERVER_ERROR, msg: '服务器异常' },
+        HttpStatus.OK,
+      );
+      // throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -30,7 +41,13 @@ export class UserService {
     const user = await this.userRepository.findOne({
       where: { username },
     });
-    if (!user) throw new HttpException('用户名不存在', HttpStatus.BAD_REQUEST);
+    if (!user) {
+      throw new HttpException(
+        { code: HTTP_CLIENT_ERROR, msg: '用户名不存在' },
+        HttpStatus.OK,
+      );
+      // throw new HttpException('用户名不存在', HttpStatus.BAD_REQUEST)
+    }
     return user;
   }
 }
