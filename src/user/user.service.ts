@@ -4,7 +4,11 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { HTTP_CLIENT_ERROR, HTTP_SERVER_ERROR } from '../../config/httpcode';
+import {
+  HTTP_CLIENT_ERROR,
+  HTTP_SERVER_ERROR,
+  HTTP_SUCCESS,
+} from '../../config/httpcode';
 
 @Injectable()
 export class UserService {
@@ -26,8 +30,19 @@ export class UserService {
       // throw new Error('用户已存在');
     }
     try {
-      const newUser = await this.userRepository.create(createUserDto);
-      return await this.userRepository.save(newUser);
+      const newUser = this.userRepository.create(createUserDto);
+      const { username, nickname, create_time } =
+        await this.userRepository.save(newUser);
+
+      return {
+        code: HTTP_SUCCESS,
+        data: {
+          username,
+          nickname,
+          create_time,
+        },
+        msg: 'success',
+      };
     } catch (error) {
       throw new HttpException(
         { code: HTTP_SERVER_ERROR, msg: '服务器异常' },

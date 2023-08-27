@@ -3,8 +3,8 @@ POST http://localhost:3000/user/register
 Content-Type: application/json
 
 {
-    "username": "luo1333",
-    "password": "123456789"
+    "username": "leslie",
+    "password": "123456"
 }
 
 ### 登录
