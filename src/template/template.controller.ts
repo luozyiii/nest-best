@@ -17,7 +17,7 @@ export class TemplateController {
   }
 
   @Post('/add')
-  @ApiOperation({ summary: '添加书籍' })
+  @ApiOperation({ summary: '添加模版' })
   @ApiBody({ type: CreateTemplateDto })
   createTemplate(@Body() body: CreateTemplateDto) {
     return this.templateService.create(body);

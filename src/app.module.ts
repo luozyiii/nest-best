@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { MongooseModule } from '@nestjs/mongoose';
-import { mysqlConfig, mongodbUrl } from '../config/index';
+// import { MongooseModule } from '@nestjs/mongoose';
+import { mysqlConfig } from '../config/index';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CommonModule } from './common/common.module';
@@ -14,7 +14,7 @@ import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({ ...mysqlConfig }),
-    MongooseModule.forRoot(mongodbUrl),
+    // MongooseModule.forRoot(mongodbUrl),
     CommonModule,
     AuthModule,
     UserModule,
